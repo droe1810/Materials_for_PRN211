@@ -1,0 +1,137 @@
+// Load dữ liệu lên dataGivView
+private void Form1_Load(object sender, EventArgs e)
+        {
+            dgvSupplier.DataSource = SupplierDAO.getListSupplier();
+            cbContactTitle.DataSource = SupplierDAO.getListContactTitle(); // load du lieu cho combobox
+        }
+
+// lấy dữ liệu mà người dùng input
+     public Supplier GetSupplier()
+        {
+            Supplier sup = new Supplier();
+            sup.SupplierId = int.Parse(tbSupId.Text);
+            sup.CompanyName = tbCompanyName.Text;
+            sup.ContactName = tbContactName.Text;
+            sup.ContactTitle = cbContactTitle.SelectedItem.ToString();
+            sup.Phone = tbPhone.Text;
+            sup.HomePage = tbHomepage.Text;
+
+            return sup;
+        }
+
+// Click nút add -> add
+private void btnAdd_Click(object sender, EventArgs e)
+        {
+            Supplier sup = new Supplier();
+            sup.ContactName = tbContactName.Text;
+            sup.CompanyName = tbCompanyName.Text;
+            sup.ContactTitle = cbContactTitle.SelectedItem.ToString();
+            sup.Phone = tbPhone.Text;
+            sup.Homepage = tbHomepage.Text;
+
+            int i = SupplierDAO.insertSupplier(sup);
+            if (i > 0)
+            {
+                dgvSupplier.DataSource = SupplierDAO.getListSupplier();
+
+                MessageBox.Show("insert success!");
+            }
+            else
+            {
+                MessageBox.Show("insert fail!");
+            }
+        }
+
+
+// Click vào dữ liệu -> hiển thị thông tin dữ liệu
+ private void dgvSupplier_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+            {
+                return;
+            }
+            tbSupId.Text = dgvSupplier.Rows[e.RowIndex].Cells[0].FormattedValue.ToString();
+            tbCompanyName.Text = dgvSupplier.Rows[e.RowIndex].Cells[1].FormattedValue.ToString();
+            tbContactName.Text = dgvSupplier.Rows[e.RowIndex].Cells[2].FormattedValue.ToString();
+            cbContactTitle.SelectedItem = dgvSupplier.Rows[e.RowIndex].Cells[3].FormattedValue.ToString();
+            tbPhone.Text = dgvSupplier.Rows[e.RowIndex].Cells[4].FormattedValue.ToString();
+            tbHomepage.Text = dgvSupplier.Rows[e.RowIndex].Cells[5].FormattedValue.ToString();
+        }
+
+// Click núp update -> update
+ private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            Supplier sup = new Supplier();
+            sup.supplierID = int.Parse(tbSupId.Text);
+            sup.ContactName = tbContactName.Text;
+            sup.CompanyName = tbCompanyName.Text;
+            sup.ContactTitle = cbContactTitle.SelectedItem.ToString();
+            sup.Phone = tbPhone.Text;
+            sup.Homepage = tbHomepage.Text;
+
+            int i = SupplierDAO.updateSupplier(sup);
+            if (i > 0)
+            {
+                dgvSupplier.DataSource = SupplierDAO.getListSupplier();
+
+                MessageBox.Show("update success!");
+            }
+            else
+            {
+                MessageBox.Show("update fail!");
+            }
+        }
+
+
+// Click núp delete -> -> delete
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            Supplier sup = new Supplier();
+            sup.supplierID = int.Parse(tbSupId.Text);
+            int i = SupplierDAO.deleteSupplier(sup);
+            if (i > 0)
+            {
+                dgvSupplier.DataSource = SupplierDAO.getListSupplier();
+
+                MessageBox.Show("delete success!");
+            }
+            else
+            {
+                MessageBox.Show("delete fail!");
+            }
+        }
+
+
+// Click núp refsesh -> dữ liệu đang hiện thị refresh lại empty
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            tbSupId.Text = String.Empty;
+            tbCompanyName.Text = String.Empty;
+            tbContactName.Text = String.Empty;
+            cbContactTitle.SelectedIndex = 0;
+            tbPhone.Text = String.Empty;
+            tbHomepage.Text = String.Empty;
+        }
+// Search
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            String txt = tbSearch.Text;
+            if (String.IsNullOrEmpty(txt) == false)
+            {
+                List<Supplier> ls = SupplierDAO.getListSupplier();
+                List<Supplier> listFound = new List<Supplier>();
+
+                foreach (Supplier s in ls) {
+                    if (s.CompanyName.Contains(txt) || s.ContactTitle.Contains(txt) || s.ContactName.Contains(txt))
+                    {
+                        listFound.Add(s);
+                    }
+                }
+
+                dgvSupplier.DataSource = listFound;
+
+            }
+            else {
+                dgvSupplier.DataSource = SupplierDAO.getListSupplier();
+            }
+        }

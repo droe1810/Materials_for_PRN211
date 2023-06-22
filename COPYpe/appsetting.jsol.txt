@@ -1,0 +1,6 @@
+{
+  "ConnectionStrings": {
+    "DB": " server = DESKTOP-NVLBRT0; database=NorthWind;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true"
+  }
+
+}

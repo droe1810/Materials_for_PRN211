@@ -1,0 +1,119 @@
+using DemoWinformDAO2.Models;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DemoWinformDAO2.DAO
+{
+    internal class SupplierDAO
+    {
+        public static List<Supplier> getListSupplier()
+        {
+            String Sql = "select * from Suppliers";
+            DataTable dt = DAO.GetDataBySQL(Sql);
+            List<Supplier> le = new List<Supplier>();
+            foreach (DataRow dr in dt.Rows)
+            {
+                Supplier sup = new Supplier();
+                sup.supplierID = int.Parse(dr["SupplierID"].ToString());
+                sup.CompanyName = (dr["CompanyName"].ToString());
+                sup.ContactName = (dr["ContactName"].ToString());
+                sup.ContactTitle = (dr["ContactTitle"].ToString());
+                sup.Phone = (dr["Phone"].ToString());
+                sup.Homepage = ((dr["HomePage"].ToString()));
+
+                le.Add(sup);
+
+            }
+            return le;
+        }
+
+        public static List<String> getListContactTitle()
+        {
+            String Sql = "select distinct ContactTitle from Suppliers";
+            DataTable dt = DAO.GetDataBySQL(Sql);
+            List<String> ls = new List<String>();
+            foreach (DataRow dr in dt.Rows)
+            {
+                ls.Add(dr["ContactTitle"].ToString());
+
+            }
+            return ls;
+        }
+
+        public static int insertSupplier(Supplier sup)
+        {
+            String sql = @"insert into Suppliers
+                         ( [CompanyName], [ContactName], [ContactTitle], [Phone], [HomePage])
+                         Values
+                         (@companyname, @contactname, @contacttitle, @phone, @homepage)";
+
+
+            SqlParameter para1 = new SqlParameter("@companyname", DbType.String);
+            para1.Value = sup.CompanyName;
+
+            SqlParameter para2 = new SqlParameter("@contactname", DbType.String);
+            para2.Value = sup.ContactName;
+
+            SqlParameter para3 = new SqlParameter("@contacttitle", DbType.String);
+            para3.Value = sup.ContactTitle;
+
+            SqlParameter para4 = new SqlParameter("@phone", DbType.String);
+            para4.Value = sup.Phone;
+
+            SqlParameter para5 = new SqlParameter("@homepage", DbType.String);
+            para5.Value = sup.Homepage;
+
+            return DAO.ExcuteSql(sql, para1, para2, para3, para4, para5);
+
+        }
+
+        public static int updateSupplier(Supplier sup)
+        {
+            String sql = @"Update Suppliers set
+                           [CompanyName] = @companyname,
+                           [ContactName] = @contactname,
+                           [ContactTitle] = @contacttitle,
+                           [Phone] = @phone,
+                           [HomePage] = @homepage
+                Where [SupplierID] = @supId";
+
+
+            SqlParameter para1 = new SqlParameter("@companyname", DbType.String);
+            para1.Value = sup.CompanyName;
+
+            SqlParameter para2 = new SqlParameter("@contactname", DbType.String);
+            para2.Value = sup.ContactName;
+
+            SqlParameter para3 = new SqlParameter("@contacttitle", DbType.String);
+            para3.Value = sup.ContactTitle;
+
+            SqlParameter para4 = new SqlParameter("@phone", DbType.String);
+            para4.Value = sup.Phone;
+
+            SqlParameter para5 = new SqlParameter("@homepage", DbType.String);
+            para5.Value = sup.Homepage;
+
+            SqlParameter para6 = new SqlParameter("@supId", DbType.Int32);
+            para6.Value = sup.supplierID;
+
+            return DAO.ExcuteSql(sql, para1, para2, para3, para4, para5, para6);
+        }
+
+        public static int deleteSupplier(Supplier sup)
+        {
+            String sql = @"Update Products set SupplierID = null  Where SupplierID = @supId
+                           delete from Suppliers where SupplierID =  @supId";
+
+            SqlParameter para1 = new SqlParameter("@supId", DbType.Int32);
+            para1.Value = sup.supplierID;
+
+            return DAO.ExcuteSql(sql, para1);
+        }
+
+    }
+}
