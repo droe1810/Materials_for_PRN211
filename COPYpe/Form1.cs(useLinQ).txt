@@ -1,0 +1,50 @@
+using DemoLinQ.Models;
+
+namespace DemoLinQ
+{
+    public partial class Form1 : Form
+    {
+        public ManagerContext context;
+        public Form1()
+        {
+            context = new ManagerContext();
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            //dgvData.DataSource = context.Employees.ToList();
+            dgvData.DataSource = (
+                                  from d in context.Departments
+                                  join emp in context.Employees
+                                  on d.DepartmentId equals emp.DepartmentId
+                                  //   where d.DepartmentName.Equals("IT")
+                                  select new
+                                  {
+                                      emp.EmployeeId,
+                                      emp.EmployeeName,
+                                      d.DepartmentName,
+                                  }
+                                ).ToList();
+
+        }
+
+        private void tbSearch_TextChanged(object sender, EventArgs e)
+        {
+            String txt = tbSearch.Text;
+            dgvData.DataSource = (
+                            from d in context.Departments
+                            join emp in context.Employees
+                            on d.DepartmentId equals emp.DepartmentId
+                            where emp.EmployeeName.Contains(txt)
+                            orderby emp.EmployeeId descending
+                            select new
+                            {
+                                emp.EmployeeId,
+                                emp.EmployeeName,
+                                d.DepartmentName,
+                            }
+                          ).ToList();
+        }
+    }
+}

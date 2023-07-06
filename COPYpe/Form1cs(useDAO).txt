@@ -112,6 +112,7 @@ private void btnAdd_Click(object sender, EventArgs e)
             tbPhone.Text = String.Empty;
             tbHomepage.Text = String.Empty;
         }
+
 // Search
         private void btnSearch_Click(object sender, EventArgs e)
         {

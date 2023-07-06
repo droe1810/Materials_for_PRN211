@@ -1,49 +1,23 @@
-//load dữ liệu lên
-        private void Form1_Load(object sender, EventArgs e)
+using DemoEntityFramework.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
+using System.Net;
+
+namespace DemoEntityFramework
+{
+    public partial class Form1 : Form
+    {
+        public NorthWindContext context;
+        public Form1()
         {
-            //dgvSupplier.DataSource = context.Suppliers.ToList();
-            dgvSupplier.DataSource = (from x in context.Suppliers
-                                      select new
-                                      {
-                                          x.SupplierId,
-                                          x.CompanyName,
-                                          x.ContactName,
-                                          x.ContactTitle,
-                                          x.Phone,
-                                          x.HomePage
-                                      }
-                                     ).ToList();
-	// lấy dữ liệu từ database đẩy vào combobox (distinct)
-            cbContactTitle.DataSource = context.Suppliers.Select(x => x.ContactTitle).Distinct().ToList();
+            context = new NorthWindContext();
+            InitializeComponent();
         }
 
-
-//Load dữ liệu (Có join, where, orderby)
-        private void Form1_Load(object sender, EventArgs e)
+//ham load data de co the tai su dung
+        public void loadData()
         {
-            //dgvData.DataSource = context.Employees.ToList();
-            dgvData.DataSource = (
-                                  from d in context.Departments
-                                  join emp in context.Employees
-                                  on d.DepartmentId equals emp.DepartmentId
-                                  //   where d.DepartmentName.Equals("IT")
-				  // order by ...
-                                  select new
-                                  {
-                                      emp.EmployeeId,
-                                      emp.EmployeeName,
-                                      d.DepartmentName,
-                                  }
-                                ).ToList();
-
-        }
-
-
-// tách thành hàm riêng, để mỗi lần thao tác (add,delete) gọi lại cho tiện
- 	public void loadData()
-        {
-	    //dgvSupplier.DataSource = context.Suppliers.toList();
-            dgvSupplier.DataSource = (from x in context.Suppliers
+            dgvSupplier.DataSource = (from x in context.Suppliers 
                                       select new
                                       {
                                           x.SupplierId,
@@ -58,7 +32,7 @@
         }
 
 
-// get 1 obj mà người dùng input
+//get data that user input
         public Supplier GetSupplier()
         {
             Supplier sup = new Supplier();
@@ -72,7 +46,7 @@
             return sup;
         }
 
-// CellContextClick
+//display data when user click to cell
         private void dgvSupplier_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0)
@@ -87,11 +61,27 @@
             tbHomepage.Text = dgvSupplier.Rows[e.RowIndex].Cells[5].FormattedValue.ToString();
         }
 
+//load data tu database len dgv
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            //dgvSupplier.DataSource = context.Suppliers.ToList();
+            dgvSupplier.DataSource = (from x in context.Suppliers
+                                      select new
+                                      {
+                                          x.SupplierId,
+                                          x.CompanyName,
+                                          x.ContactName,
+                                          x.ContactTitle,
+                                          x.Phone,
+                                          x.HomePage
+                                      }
+                                     ).ToList();
+//load combobox
+            cbContactTitle.DataSource = context.Suppliers.Select(x => x.ContactTitle).Distinct().ToList();
+        }
 
 
-
-// Add
-
+//add
         private void btnAdd_Click(object sender, EventArgs e)
         {
             try
@@ -108,7 +98,7 @@
         }
 
 
-//Update
+//update
         private void btnUpdate_Click(object sender, EventArgs e)
         {
             try
@@ -137,8 +127,8 @@
             }
         }
 
-//Delete
 
+//delete
         private void btnDelete_Click(object sender, EventArgs e)
         {
             try
@@ -156,7 +146,8 @@
             }
         }
 
-//Refresh
+
+//refesh
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             tbSupId.Text = String.Empty;
@@ -166,23 +157,5 @@
             tbPhone.Text = String.Empty;
             tbHomepage.Text = String.Empty;
         }
-
-
-//Search(Text Changed)
-        private void tbSearch_TextChanged(object sender, EventArgs e)
-        {
-            String txt = tbSearch.Text;
-            dgvData.DataSource = (
-                            from d in context.Departments
-                            join emp in context.Employees
-                            on d.DepartmentId equals emp.DepartmentId
-                            where emp.EmployeeName.Contains(txt)
-                            orderby emp.EmployeeId descending
-                            select new
-                            {
-                                emp.EmployeeId,
-                                emp.EmployeeName,
-                                d.DepartmentName,
-                            }
-                          ).ToList();
-        }
+    }
+}
