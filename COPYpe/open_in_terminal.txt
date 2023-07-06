@@ -1,1 +1,1 @@
-dotnet ef dbcontext scaffold "Server=DESKTOP-NVLBRT0;database=NorthWind;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true" Microsoft.EntityFrameworkCore.SqlServer --output-dir Models
+dotnet ef dbcontext scaffold "Server=DESKTOP-NVLBRT0;database=PE_PRN211_23SUB1_LN;Trusted_Connection=SSPI;Encrypt=false;TrustServerCertificate=true" Microsoft.EntityFrameworkCore.SqlServer --output-dir Models
