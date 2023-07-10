@@ -1,0 +1,34 @@
+private void btWriteToFile_Click(object sender, EventArgs e)
+{
+    StreamWriter output = null;
+
+    try
+    {
+        string rollnumber = tbRollnumber.Text;
+        string name = tbFullname.Text;
+
+        if (string.IsNullOrEmpty(rollnumber) == false && string.IsNullOrEmpty(name)==false)
+        {
+            	output = File.CreateText(HE151199.txt);
+		output.WriteLine("Rollnumber: " + rollnumber)
+		output.WriteLine("Fullname: " + name);
+		output.WriteLine("University: " + tbUniversity.Text);
+		MessageBox.Show("Write to file success");
+        }
+	else
+	{
+		MessageBox.Show("Rollnumber and fullname must be not empty!");
+	
+    	}
+    catch (Exception ex)
+    {
+        MessageBox.Show(ex.Message);
+    }
+    finally
+    {
+        if (output != null)
+        {
+            output.Close();
+        }
+    }
+}

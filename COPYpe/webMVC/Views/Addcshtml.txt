@@ -1,0 +1,17 @@
+
+@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@using DemoMVC.Models;
+@model Employee;
+@{
+    String mess = ViewBag.Mess;
+}
+
+<h5>@mess</h5>
+
+
+<form asp-controller="Employee" asp-action="add" method="post">
+    FirstName: <input asp-for="FirstName" type="text"  /> <br />
+    LastName:<input asp-for="LastName" type="text" required/> <br />
+    Address:<input asp-for="Address" type="text" required/> <br />
+    <input type="submit" value="Add" />
+</form>

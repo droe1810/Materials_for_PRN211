@@ -1,0 +1,14 @@
+@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@using DemoMVC.Models;
+@model Employee;
+@{
+    Employee e = ViewBag.e;
+}
+
+<form asp-controller="Employee" asp-action="Update" method="post">
+    ID: <input asp-for="EmployeeId" type="number" value="@e.EmployeeId" readonly /> <br />
+    FirstName: <input asp-for="FirstName" type="text" value="@e.FirstName" required /> <br />
+    LastName:<input asp-for="LastName" type="text" value="@e.LastName" required /> <br />
+    Address:<input asp-for="Address" type="text" value="@e.Address" required /> <br />
+    <input type="submit"  value="Update"/>
+</form>

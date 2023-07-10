@@ -1,0 +1,22 @@
+var builder = WebApplication.CreateBuilder(args);
+
+//yeu cau su dung mo hinh MVC
+builder.Services.AddControllersWithViews();
+var app = builder.Build();
+
+
+// config đường dẫn
+//app.MapGet("/", () => "Hello World!");
+
+app.MapControllerRoute(
+    name: "deafault",
+    pattern: "{controller=employee}/{action=list}"
+); // product/list
+
+
+app.MapControllerRoute(
+    name: "deafault1",
+    pattern: "{controller}/{action}/{id}"
+);  // product/delete/1
+
+app.Run();

@@ -1,0 +1,85 @@
+using Q2.Models;
+
+namespace Q2
+{
+    public partial class Form1 : Form
+    {
+        public NorthWindContext context;
+        public List<Product> lp;
+        public Form1()
+        {
+            context = new NorthWindContext();
+            lp = new List<Product>();
+            InitializeComponent();
+        }
+
+
+        public Product GetProduct()
+        {
+            Product p = new Product();
+            p.ProductName = tbProductName.Text;
+            p.SupplierId = int.Parse(cbSupName.SelectedValue.ToString());
+            p.CategoryId = int.Parse(cbCateName.SelectedValue.ToString());
+            p.QuantityPerUnit = tbQuantity.Text;
+            p.UnitPrice = decimal.Parse(tbUnitPrice.Text);
+            p.UnitsInStock = short.Parse(nudUnitStock.Value.ToString());
+            p.Discontinued = chkDis.Checked;
+
+            return p;
+        }
+
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            cbCateName.DataSource = context.Categories.ToList();
+            cbCateName.DisplayMember = "CategoryName"; // hien thi cho nguoi dung
+            cbCateName.ValueMember = "CategoryId";    // du lieu de Dev lam viec
+
+            cbSupName.DataSource = context.Suppliers.ToList();
+            cbSupName.DisplayMember = "ContactName";
+            cbSupName.ValueMember = "SupplierId";
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                lp.Add(GetProduct());
+
+                dgvProduct.DataSource = null; // Clear du lieu cu
+                dgvProduct.DataSource = (from p in lp
+                                         select new
+                                         {
+                                             p.ProductName,
+                                             p.SupplierId,
+                                             p.CategoryId,
+                                             p.QuantityPerUnit,
+                                             p.UnitPrice,
+                                             p.UnitsInStock,
+                                             p.Discontinued
+                                         }
+                                        ).ToList();
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void btnInsert_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                context.Products.AddRange(lp);
+                context.SaveChanges();
+                MessageBox.Show($"Insert Successfully {lp.Count} products");
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message);
+            }
+        }
+    }
+}

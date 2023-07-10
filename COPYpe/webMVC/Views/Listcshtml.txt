@@ -1,0 +1,40 @@
+@{
+    List<Employee> listE = ViewData["listE"] as List<Employee>;
+}
+
+@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@using DemoMVC.Models;
+
+List Employee được nhận từ controller:Employee , phương thức list chuyển xuống view:
+<br>
+
+<h4>@ViewBag.Mess</h4>
+<form asp-controller="Employee" asp-action="Add" method="get">
+    <input type="submit" value="Add Employee" />
+</form>
+
+<table border ="1">
+    <tr>
+        <td>ID</td>
+        <td>LastName</td>
+        <td>FirstName</td>
+        <td>Address</td>
+    </tr>
+
+
+     <-- foreach (Employee e in listE) -->
+
+    @foreach(Employee e in ViewBag.listE)
+    {
+        <tr>
+           <td>@e.EmployeeId</td>
+           <td>@e.LastName</td>
+           <td>@e.FirstName</td>
+           <td>@e.Address</td>
+           <td><a asp-controller="employee" asp-action="update" asp-route-id="@e.EmployeeId">Update</a></td>
+           <td><a asp-controller="employee" asp-action="delete" asp-route-id="@e.EmployeeId">Delete</a></td>
+        </tr>
+
+    }
+
+</table>

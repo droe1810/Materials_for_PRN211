@@ -42,11 +42,47 @@ namespace DemoEntityFramework
             sup.ContactTitle = cbContactTitle.SelectedItem.ToString();
             sup.Phone = tbPhone.Text;
             sup.HomePage = tbHomepage.Text;
+	    //sup.Dob = dtpDob.Value;
+
+	/*
+	    if (rbMale.Checked == true)
+	    {
+   		 emp.Sex = "Male";
+	    }
+	    else
+	    {
+   		 emp.Sex = "Female";
+	     }
+	*/
 
             return sup;
         }
 
-//display data when user click to cell
+
+//cell click
+	private void dgvEmployee_CellClick(object sender, DataGridViewCellEventArgs e)
+	{
+ 		if (e.ColumnIndex < 0 || e.RowIndex < 0)
+        	return;
+
+   		tbID.Text = dgvEmployee.Rows[e.RowIndex].Cells[0].FormattedValue.ToString();
+    		tbName.Text = dgvEmployee.Rows[e.RowIndex].Cells[1].FormattedValue.ToString();
+
+  		if (dgvEmployee.Rows[e.RowIndex].Cells[2].FormattedValue.ToString().Equals("Female"))
+		{
+        		rbFemale.Checked = true;
+    		}
+    		else
+    		{
+        		rbMale.Checked = true;
+    		}
+
+		dtpDOB.Value = DateTime.Parse(dgvEmployee.Rows[e.RowIndex].Cells[3].FormattedValue.ToString());
+    		cbPosition.Text = dgvEmployee.Rows[e.RowIndex].Cells[4].FormattedValue.ToString();
+	}
+
+
+//display data when user click to cellcontent
         private void dgvSupplier_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0)
@@ -153,9 +189,10 @@ namespace DemoEntityFramework
             tbSupId.Text = String.Empty;
             tbCompanyName.Text = String.Empty;
             tbContactName.Text = String.Empty;
-            cbContactTitle.SelectedIndex = 0;
+            cbbContactTitle.SelectedIndex = 0;
             tbPhone.Text = String.Empty;
             tbHomepage.Text = String.Empty;
+	    // dtpDob.Value = DateTime.Now;
         }
     }
 }

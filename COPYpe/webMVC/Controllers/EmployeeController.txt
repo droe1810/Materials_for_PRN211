@@ -1,0 +1,95 @@
+using Microsoft.AspNetCore.Mvc;
+using DemoMVC.Models;
+using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+
+namespace DemoMVC.Controllers
+{
+
+    public class EmployeeController : Controller
+    {
+
+
+        public NorthWindContext context = new NorthWindContext();
+
+        // IActionResult là 1 inteface thể hiện kết quả của 1 action
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        public String Hello()
+        {
+            return "Hello";
+        }
+
+        public IActionResult List()
+        {
+            List<Employee> listEmp = context.Employees.ToList();
+
+            // có 3 cách để gửi dữ liệu từ controller xuống view: viewbag, viewdata, model
+
+            ViewBag.ListE = listEmp;  // gửi bằng Viewbag, đặt tên là ListE
+                                      //    ViewData["ListE"] = listEmp;  // gửi bằng ViewData, đặt tên là ListE
+
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Add()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public IActionResult Add(Employee e)
+        {
+            if (String.IsNullOrEmpty(e.FirstName) == false || String.IsNullOrEmpty(e.LastName))
+            {
+                context.Employees.Add(e);
+                context.SaveChanges(); 
+                return Redirect("/employee/list");
+            }
+            else
+            {
+                ViewBag.Mess = "Add Fail!";
+                return View();
+            }
+           
+        }
+
+        [HttpGet]
+        public IActionResult Update(int id)
+        {
+            Employee e = context.Employees.FirstOrDefault(x => x.EmployeeId == id);
+            ViewBag.e = e;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Update(Employee eUpdate)
+        {
+            // lấy ra thằng cũ
+            Employee eOld = context.Employees.FirstOrDefault(x => x.EmployeeId == eUpdate.EmployeeId);
+            // update thành thằng mới
+                 eOld.FirstName = eUpdate.FirstName;
+            eOld.LastName = eUpdate.LastName;
+            eOld.Address = eUpdate.Address;
+            context.SaveChanges();
+
+            return Redirect("/employee/list");
+
+        }
+
+        public IActionResult Delete(int id)
+        {
+            Employee e = context.Employees.FirstOrDefault(x => x.EmployeeId == id);
+            context.Database.ExecuteSqlRaw($"Update Employees set ReportsTo = null where ReportsTo = {id}");
+            context.Database.ExecuteSqlRaw($"Update Orders set EmployeeID = null where EmployeeID = {id}");
+            context.Database.ExecuteSqlRaw($"Delete from EmployeeTerritories where EmployeeID = {id}");
+            context.Database.ExecuteSqlRaw($"delete from Employees where EmployeeID = {id}");
+            return Redirect("/employee/list");
+        }
+    }
+}

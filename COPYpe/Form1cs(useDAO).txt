@@ -136,3 +136,52 @@ private void btnAdd_Click(object sender, EventArgs e)
                 dgvSupplier.DataSource = SupplierDAO.getListSupplier();
             }
         }
+// Seach(text box) - text change
+	private void tbName_TextChanged(object sender, EventArgs e)
+	{
+    		String text = tbName.Text;
+   	        List<Employee> employees = EmployeeDAO.getAllEmployees();
+   		 dgvEmployee.DataSource = employees.Where(x => x.Name.ToLower().Contains(text.ToLower())).ToList();
+	}
+//radio button - checked change
+	private void rbMale_CheckedChanged(object sender, EventArgs e)
+	{
+  	      if (rbMale.Checked == true)
+   	      {
+        	  List<Employee> employees = EmployeeDAO.getAllEmployees();
+        	  dgvEmployee.DataSource = employees.Where(x => x.Sex == "Male").ToList();
+    	      }
+	}
+
+
+	private void rbFemale_CheckedChanged(object sender, EventArgs e)
+	{
+   		 if (rbFemale.Checked == true)
+    		{
+     		   List<Employee> employees = EmployeeDAO.getAllEmployees();
+     		   dgvEmployee.DataSource = employees.Where(x => x.Sex == "Female").ToList();
+    		}
+	}
+
+
+	private void rbALl_CheckedChanged(object sender, EventArgs e)
+	{
+   		 if (rbFemale.Checked == true)
+    		{
+     		  	dgvEmployee.DataSource = EmployeeDAO.GelAllEmployees();
+    		}
+	}
+
+// combobox - SelectedIndexChange
+	private void cbbPosition_SelectedIndexChange(object sender, EventArgs e)
+	{
+		if(text.Equals("All positions"))
+		{
+			dgvEmployee.DataSource = employees;
+		}
+   		String text = tbName.Text;
+   	        List<Employee> employees = EmployeeDAO.getAllEmployees();
+   		dgvEmployee.DataSource = employees.Where(x => x.Position == text).ToList();	
+	}
+
+
